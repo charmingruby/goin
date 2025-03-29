@@ -15,9 +15,29 @@ describe("Goin", function () {
     return { goin, owner, otherAccount };
   }
 
-  it("should receive a ping", async function () {
-    const { goin, owner, otherAccount } = await loadFixture(deployFixture);
+  describe("ERC-20 state variables", function () {
+    it("should have the correct name", async function () {
+      const { goin, owner, otherAccount } = await loadFixture(deployFixture);
 
-    expect(await goin.ping()).to.equal("pong");
+      expect(await goin.name()).to.equal("Goin");
+    });
+
+    it("should have the correct symbol", async function () {
+      const { goin, owner, otherAccount } = await loadFixture(deployFixture);
+
+      expect(await goin.symbol()).to.equal("GOIN");
+    });
+
+    it("should have the correct decimals", async function () {
+      const { goin, owner, otherAccount } = await loadFixture(deployFixture);
+
+      expect(await goin.decimals()).to.equal(18);
+    });
+
+    it("should have the correct totalSupply", async function () {
+      const { goin, owner, otherAccount } = await loadFixture(deployFixture);
+
+      expect(await goin.totalSupply()).to.equal(1000n * 10n ** 18n);
+    });
   });
 });
