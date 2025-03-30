@@ -86,5 +86,54 @@ describe("Goin", () => {
         expect(await goin.allowance(owner.address, otherAccount.address)).to.equal(100n);
       });
     });
+
+    describe("transferFrom", () => {
+      it("should transfer tokens from one account to another", async () => {
+        const { goin, owner, otherAccount } = await loadFixture(deployFixture);
+
+        const initialOwnerBalance = await goin.balanceOf(owner.address);
+        const initialOtherAccountBalance = await goin.balanceOf(otherAccount.address);
+
+        await goin.approve(otherAccount.address, 10n);
+
+        const otherAccountInstance = goin.connect(otherAccount);
+
+        await otherAccountInstance.transferFrom(owner.address, otherAccount.address, 5n)
+
+        const finalOwnerBalance = await goin.balanceOf(owner.address);
+        const finalOtherAccountBalance = await goin.balanceOf(otherAccount.address);
+
+        const restAllowance = await goin.allowance(owner.address, otherAccount.address)
+
+        expect(initialOwnerBalance).to.equal(1000n * 10n ** 18n)
+        expect(initialOtherAccountBalance).to.equal(0n)
+        expect(finalOwnerBalance).to.equal((1000n * 10n ** 18n) - 5n)
+        expect(finalOtherAccountBalance).to.equal(5n)
+        expect(restAllowance).to.equal(5n)
+      });
+
+      it("should be not able transfer tokens from if there is no allowance", async () => {
+        const { goin, owner, otherAccount } = await loadFixture(deployFixture);
+
+        const otherAccountInstance = goin.connect(otherAccount);
+
+        await expect(otherAccountInstance.transferFrom(owner.address, otherAccount.address, 5n)).
+          to.revertedWith("Insufficient allowance")
+      });
+
+      it("should be not able transfer tokens from if there is insufficient balance", async () => {
+        const { goin, owner, otherAccount } = await loadFixture(deployFixture);
+
+        const initialBalance = await goin.balanceOf(owner.address);
+        await goin.transfer(otherAccount.address, initialBalance - 5n);
+
+        const otherAccountInstance = goin.connect(otherAccount);
+
+        await goin.approve(otherAccount.address, 10n);
+
+        await expect(otherAccountInstance.transferFrom(owner.address, otherAccount.address, 10n))
+          .to.be.revertedWith("Insufficient balance");
+      });
+    });
   });
 });

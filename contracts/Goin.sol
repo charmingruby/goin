@@ -59,4 +59,24 @@ contract Goin {
     ) public view returns (uint256 remaining) {
         return allowances[_owner][_spender];
     }
+
+    function transferFrom(
+        address _from,
+        address _to,
+        uint256 _value
+    ) public returns (bool success) {
+        require(balanceOf(_from) >= _value, "Insufficient balance");
+        require(
+            allowance(_from, msg.sender) >= _value,
+            "Insufficient allowance"
+        );
+
+        balances[_from] -= _value;
+        allowances[_from][msg.sender] -= _value;
+        balances[_to] += _value;
+
+        emit Transfer(_from, _to, _value);
+
+        return true;
+    }
 }
