@@ -5,7 +5,9 @@
   "scripts": {
     "start": "npx hardhat node",
     "test": "npx hardhat test",
-    "compile": "npx hardhat compile"
+    "compile": "npx hardhat compile",
+    "deploy:dev": "npx hardhat ignition deploy ignition/modules/Goin.ts --network local",
+    "deploy:prod": "npx hardhat ignition deploy ignition/modules/Goin.ts --network sepolia"
   },
   "repository": {
     "type": "git",
@@ -22,6 +24,8 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@nomiclabs/hardhat-etherscan": "^3.1.8",
+    "dotenv": "^16.4.7",
     "hardhat": "^2.22.19"
   }
 }
