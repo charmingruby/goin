@@ -18,6 +18,7 @@ contract Goin {
     );
 
     mapping(address => uint256) private balances;
+    mapping(address => mapping(address => uint256)) private allowances;
 
     constructor() {
         balances[msg.sender] = totalSupply;
@@ -39,5 +40,23 @@ contract Goin {
         emit Transfer(msg.sender, _to, _value);
 
         return true;
+    }
+
+    function approve(
+        address _spender,
+        uint256 _value
+    ) public returns (bool success) {
+        allowances[msg.sender][_spender] = _value;
+
+        emit Approval(msg.sender, _spender, _value);
+
+        return true;
+    }
+
+    function allowance(
+        address _owner,
+        address _spender
+    ) public view returns (uint256 remaining) {
+        return allowances[_owner][_spender];
     }
 }

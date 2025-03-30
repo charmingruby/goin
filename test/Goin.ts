@@ -76,5 +76,15 @@ describe("Goin", () => {
         await expect(otherAccountInstance.transfer(owner.address, 1n)).to.be.revertedWith("Insufficient balance");
       });
     });
+
+    describe("approval and allowance", () => {
+      it("should approve a spender", async () => {
+        const { goin, owner, otherAccount } = await loadFixture(deployFixture);
+
+        await goin.approve(otherAccount.address, 100n);
+
+        expect(await goin.allowance(owner.address, otherAccount.address)).to.equal(100n);
+      });
+    });
   });
 });
