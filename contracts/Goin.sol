@@ -17,15 +17,15 @@ contract Goin {
         uint256 _value
     );
 
-    mapping(address => uint256) private balances;
-    mapping(address => mapping(address => uint256)) private allowances;
+    mapping(address => uint256) private _balances;
+    mapping(address => mapping(address => uint256)) private _allowances;
 
     constructor() {
-        balances[msg.sender] = totalSupply;
+        _balances[msg.sender] = totalSupply;
     }
 
     function balanceOf(address _owner) public view returns (uint256 balance) {
-        return balances[_owner];
+        return _balances[_owner];
     }
 
     function transfer(
@@ -34,8 +34,8 @@ contract Goin {
     ) public returns (bool success) {
         require(balanceOf(msg.sender) >= _value, "Insufficient balance");
 
-        balances[msg.sender] -= _value;
-        balances[_to] += _value;
+        _balances[msg.sender] -= _value;
+        _balances[_to] += _value;
 
         emit Transfer(msg.sender, _to, _value);
 
@@ -46,7 +46,7 @@ contract Goin {
         address _spender,
         uint256 _value
     ) public returns (bool success) {
-        allowances[msg.sender][_spender] = _value;
+        _allowances[msg.sender][_spender] = _value;
 
         emit Approval(msg.sender, _spender, _value);
 
@@ -57,7 +57,7 @@ contract Goin {
         address _owner,
         address _spender
     ) public view returns (uint256 remaining) {
-        return allowances[_owner][_spender];
+        return _allowances[_owner][_spender];
     }
 
     function transferFrom(
@@ -71,9 +71,9 @@ contract Goin {
             "Insufficient allowance"
         );
 
-        balances[_from] -= _value;
-        allowances[_from][msg.sender] -= _value;
-        balances[_to] += _value;
+        _balances[_from] -= _value;
+        _allowances[_from][msg.sender] -= _value;
+        _balances[_to] += _value;
 
         emit Transfer(_from, _to, _value);
 

@@ -6,7 +6,6 @@ dotenv.config();
 
 const config: HardhatUserConfig = {
   solidity: "0.8.28",
-  defaultNetwork: "local",
   networks: {
     local: {
       url: "http://127.0.0.1:8545",
